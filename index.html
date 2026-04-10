@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,154 +6,269 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DUNK'S | Street Luxury Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
-
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        @keyframes infinite-scroll {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-        .animate-infinite-scroll { animation: infinite-scroll 30s linear infinite; }
-        
-        /* Shutter Animation Styles */
-        #shutter-container {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            pointer-events: none;
-        }
-        .shutter-half {
-            flex: 1;
-            background: black;
-            transition: transform 1.2s cubic-bezier(0.87, 0, 0.13, 1);
-            pointer-events: all;
-        }
+        @keyframes infinite-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        .animate-infinite-scroll { animation: infinite-scroll 40s linear infinite; }
+        #shutter-container { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; pointer-events: none; }
+        .shutter-half { flex: 1; background: black; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); pointer-events: all; }
         .shutter-open-top { transform: translateY(-100%); }
         .shutter-open-bottom { transform: translateY(100%); }
-        
-        #loader-logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10000;
-            transition: opacity 0.5s ease;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="bg-white text-black antialiased">
 
+    <!-- Preloader -->
     <div id="shutter-container">
-        <div id="loader-logo" class="text-white text-center">
-            <h1 class="text-4xl font-black tracking-tighter mb-2">DUNK'S</h1>
-            <p class="text-[8px] tracking-[0.4em] uppercase opacity-50">Studio Loading</p>
+        <div id="loader-logo" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] text-white text-center transition-opacity duration-700">
+            <h1 class="text-6xl font-black tracking-tighter uppercase italic">DUNK'S</h1>
+            <div class="h-0.5 w-12 bg-white mx-auto mt-4 animate-pulse"></div>
         </div>
         <div class="shutter-half" id="shutter-top"></div>
         <div class="shutter-half" id="shutter-bottom"></div>
     </div>
 
-    <div class="bg-black text-white py-2 px-4 text-[10px] tracking-[0.3em] font-bold text-center uppercase">
-        Free Worldwide Shipping on Orders Above ₹5000
+    <!-- Announcement Bar -->
+    <div class="bg-black text-white py-2 text-[10px] font-bold tracking-[0.3em] text-center uppercase">
+        Drop 001 Now Available Worldwide
     </div>
 
-    <nav id="navbar" class="sticky top-0 z-50 bg-white transition-all duration-300 px-6 py-4 lg:px-12 flex justify-between items-center border-b border-gray-100">
-        <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold tracking-widest">
-            <a href="#" class="hover:opacity-50">SHOP</a>
-            <a href="#" class="hover:opacity-50">COLLECTIONS</a>
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100 px-6 py-4 lg:px-12 flex justify-between items-center">
+        <div class="hidden lg:flex space-x-8 text-[10px] font-black uppercase tracking-widest">
+            <a href="#" class="hover:opacity-50 transition">Shop</a>
+            <a href="#" class="hover:opacity-50 transition">Archive</a>
         </div>
-        <div class="h-8 lg:h-10">
+        
+        <div class="h-8 lg:h-12">
             <svg viewBox="0 0 350 100" class="h-full w-auto">
-                <text x="10" y="75" style="font-family: Arial Black; font-size: 70px; font-weight: 900; fill: white; stroke: black; stroke-width: 2.5px; letter-spacing: -2px;">DUNKS</text>
+                <text x="10" y="75" style="font-family: Arial Black; font-size: 80px; font-weight: 900; fill: black; letter-spacing: -4px;">DUNKS</text>
             </svg>
         </div>
+
         <div class="flex items-center space-x-6">
-            <div class="relative cursor-pointer" id="cartBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-                <span id="cart-count" class="absolute -top-1 -right-1 bg-black text-white text-[8px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
+            <div id="authSection">
+                <button id="loginBtn" class="text-[10px] font-black uppercase tracking-widest border-b-2 border-black pb-0.5">Login</button>
+                <div id="userProfile" class="hidden items-center space-x-3">
+                    <img id="userImg" class="w-7 h-7 rounded-full grayscale border border-black/10" src="">
+                    <button id="logoutBtn" class="text-[9px] font-bold uppercase opacity-30 hover:opacity-100 transition">Out</button>
+                </div>
+            </div>
+            <div class="relative cursor-pointer group" id="openCart">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-black text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full font-black">0</span>
             </div>
         </div>
     </nav>
 
-    <section class="relative h-[80vh] bg-gray-200 flex items-center justify-center">
-        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?q=80&w=2000" class="absolute inset-0 w-full h-full object-cover grayscale opacity-80" />
-        <div class="relative z-10 text-center text-white mix-blend-difference">
-            <h1 class="text-7xl md:text-[10rem] font-black tracking-tighter leading-none">STREET<br>LUXURY</h1>
+    <!-- Hero Section -->
+    <section class="relative h-[90vh] bg-neutral-100 flex items-center justify-center overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 brightness-75" alt="Hero">
+        <div class="relative z-10 text-center text-white mix-blend-difference px-6">
+            <h1 class="text-8xl md:text-[14rem] font-black tracking-tighter leading-none uppercase italic">STUDIO</h1>
+            <p class="text-[12px] tracking-[0.5em] font-bold uppercase mt-4">Crafted In India / Drop 001</p>
         </div>
     </section>
 
-    <section class="p-12 lg:px-24">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="product-grid">
-            <div class="group cursor-pointer" onclick="addToCart('p1', 'ARCHIVE TEE', 2499)">
-                <div class="aspect-[3/4] bg-gray-100 mb-4 overflow-hidden relative">
-                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span class="bg-white text-black px-4 py-2 text-[10px] font-bold">ADD TO CART</span>
-                    </div>
-                </div>
-                <div class="flex justify-between font-bold text-xs">
-                    <span>ARCHIVE TEE</span>
-                    <span>₹2,499</span>
-                </div>
-            </div>
-            </div>
+    <!-- Product Grid -->
+    <section class="px-6 lg:px-24 py-32">
+        <div class="flex justify-between items-end mb-16 border-b-2 border-black pb-8">
+            <h2 class="text-5xl font-black tracking-tighter uppercase italic">The Collection</h2>
+            <p class="text-[10px] font-bold tracking-widest text-neutral-400">001 — 004</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12" id="productGrid"></div>
     </section>
 
+    <!-- Infinite Scroll Marquee -->
+    <section class="bg-black text-white py-24 overflow-hidden select-none border-y border-white/10">
+        <div class="whitespace-nowrap flex animate-infinite-scroll">
+            <h2 class="text-[12vw] font-black tracking-tighter leading-none opacity-20 mx-8 uppercase italic">DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO</h2>
+        </div>
+    </section>
+
+    <!-- Detailed Footer -->
+    <footer class="bg-white pt-32 pb-12 px-6 lg:px-24 border-t border-gray-100">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
+            <div class="col-span-1 md:col-span-1">
+                <h4 class="text-2xl font-black tracking-tighter uppercase italic mb-6">Dunk's</h4>
+                <p class="text-xs font-medium text-neutral-400 leading-relaxed uppercase tracking-widest">Experimental Streetwear Studio. Redefining the Indian luxury landscape through heavy-weight silhouettes.</p>
+            </div>
+            <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
+                <h4 class="text-neutral-300">Navigation</h4>
+                <a href="#" class="hover:text-neutral-400">Shop All</a>
+                <a href="#" class="hover:text-neutral-400">Studio Journal</a>
+                <a href="#" class="hover:text-neutral-400">Archive</a>
+            </div>
+            <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
+                <h4 class="text-neutral-300">Support</h4>
+                <a href="#" class="hover:text-neutral-400">Shipping Info</a>
+                <a href="#" class="hover:text-neutral-400">Returns</a>
+                <a href="#" class="hover:text-neutral-400">Contact</a>
+            </div>
+            <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
+                <h4 class="text-neutral-300">Connect</h4>
+                <a href="#" class="hover:text-neutral-400">Instagram</a>
+                <a href="#" class="hover:text-neutral-400">TikTok</a>
+            </div>
+        </div>
+        <div class="pt-12 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-neutral-300 uppercase tracking-[0.3em]">
+            <p>© 2026 DUNK'S STUDIO</p>
+            <p>India</p>
+        </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black/60 z-[100] hidden opacity-0 transition-opacity"></div>
+    <div id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[101] translate-x-full transition-transform duration-700 p-8 flex flex-col shadow-2xl">
+        <div class="flex justify-between items-center mb-12">
+            <h2 class="text-3xl font-black uppercase tracking-tighter italic">Your Bag</h2>
+            <button id="closeCart" class="text-2xl font-light hover:rotate-90 transition-transform">✕</button>
+        </div>
+        <div id="cartItems" class="flex-grow overflow-y-auto space-y-8 no-scrollbar"></div>
+        <div class="pt-8 border-t border-neutral-100 mt-8">
+            <div class="flex justify-between font-black uppercase text-sm mb-8 tracking-tighter">
+                <span>Subtotal</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button class="w-full bg-black text-white py-6 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-neutral-800 transition shadow-xl">Proceed to Checkout</button>
+        </div>
+    </div>
+
     <script>
-        // 1. YOUR FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyAZPYLEuSJJcQukGCMvp7QtZOs2NJMOTKQ",
             authDomain: "dunk-s-official.firebaseapp.com",
             projectId: "dunk-s-official",
             storageBucket: "dunk-s-official.firebasestorage.app",
             messagingSenderId: "85618157832",
-            appId: "1:85618157832:web:f649f2ea4099db5e81a4bd",
-            measurementId: "G-2HMMR9KY5R"
+            appId: "1:85618157832:web:f649f2ea4099db5e81a4bd"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        firebase.analytics();
+        const provider = new firebase.auth.GoogleAuthProvider();
 
-        // 2. Shutter Logic
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader-logo').style.opacity = '0';
-                document.getElementById('shutter-top').classList.add('shutter-open-top');
-                document.getElementById('shutter-bottom').classList.add('shutter-open-bottom');
-                setTimeout(() => {
-                    document.getElementById('shutter-container').style.display = 'none';
-                }, 1200);
-            }, 1500);
+        const PRODUCTS = [
+            { id: 'p1', name: 'Archive Box Tee', price: 2499, img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', type: 'NEW' },
+            { id: 'p2', name: 'Heavy Oversize', price: 3200, img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800', type: 'BEST' },
+            { id: 'p3', name: 'Studio Black', price: 2800, img: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800', type: 'LTD' },
+            { id: 'p4', name: 'Studio White', price: 1999, img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', type: 'NEW' }
+        ];
+
+        let cartUnsub = null;
+        auth.onAuthStateChanged(user => {
+            const loginBtn = document.getElementById('loginBtn');
+            const profile = document.getElementById('userProfile');
+            if (user) {
+                loginBtn.classList.add('hidden');
+                profile.classList.replace('hidden', 'flex');
+                document.getElementById('userImg').src = user.photoURL;
+                if (cartUnsub) cartUnsub();
+                cartUnsub = db.collection('carts').doc(user.uid).collection('items').onSnapshot(snap => {
+                    const items = snap.docs.map(d => ({...d.data(), id: d.id}));
+                    renderCart(items);
+                });
+            } else {
+                loginBtn.classList.remove('hidden');
+                profile.classList.replace('flex', 'hidden');
+                if (cartUnsub) cartUnsub();
+                renderCart([]);
+            }
         });
 
-        // 3. Simple Cart Logic
-        let cartCount = 0;
-        function addToCart(id, name, price) {
-            cartCount++;
-            document.getElementById('cart-count').innerText = cartCount;
-            
-            // Save to Firebase (Anonymous)
-            auth.signInAnonymously().then(({user}) => {
-                db.collection("carts").doc(user.uid).collection("items").add({
-                    productId: id,
-                    name: name,
-                    price: price,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            });
-            alert(`${name} added to studio bag.`);
+        document.getElementById('loginBtn').onclick = () => auth.signInWithPopup(provider);
+        document.getElementById('logoutBtn').onclick = () => auth.signOut();
+
+        function renderProducts() {
+            document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
+                <div class="group cursor-pointer" onclick="addToBag('${p.id}')">
+                    <div class="aspect-[3/4] bg-neutral-100 overflow-hidden relative mb-6">
+                        <img src="${p.img}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out">
+                        <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black uppercase tracking-widest">${p.type}</div>
+                        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-white text-black text-[10px] font-black px-8 py-4 uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-transform">Add to Bag</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xs font-black uppercase tracking-wider">${p.name}</h3>
+                            <p class="text-[10px] text-neutral-400 mt-1 uppercase font-bold tracking-widest">Drop 001</p>
+                        </div>
+                        <p class="text-xs font-black italic">₹${p.price.toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
         }
+
+        async function addToBag(id) {
+            const user = auth.currentUser;
+            if (!user) {
+                auth.signInWithPopup(provider);
+                return;
+            }
+            const product = PRODUCTS.find(p => p.id === id);
+            const ref = db.collection('carts').doc(user.uid).collection('items').doc(id);
+            const snap = await ref.get();
+            if (snap.exists) await ref.update({ qty: firebase.firestore.FieldValue.increment(1) });
+            else await ref.set({ ...product, qty: 1 });
+            openCartUI();
+        }
+
+        async function updateQty(id, delta) {
+            const ref = db.collection('carts').doc(auth.currentUser.uid).collection('items').doc(id);
+            const snap = await ref.get();
+            const newQty = (snap.data().qty || 1) + delta;
+            if (newQty <= 0) await ref.delete();
+            else await ref.update({ qty: newQty });
+        }
+
+        function renderCart(items) {
+            let total = 0; let count = 0;
+            const container = document.getElementById('cartItems');
+            container.innerHTML = items.map(i => {
+                total += i.price * i.qty; count += i.qty;
+                return `
+                <div class="flex gap-6 items-center">
+                    <div class="w-24 h-32 bg-neutral-100 overflow-hidden">
+                        <img src="${i.img}" class="w-full h-full object-cover grayscale">
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="text-[11px] font-black uppercase tracking-wider mb-1">${i.name}</h4>
+                        <p class="text-[10px] font-bold text-neutral-400 mb-4 italic">₹${i.price.toLocaleString()}</p>
+                        <div class="flex items-center space-x-6">
+                            <button onclick="updateQty('${i.id}', -1)" class="w-8 h-8 border border-neutral-200 flex items-center justify-center text-xs hover:bg-black hover:text-white transition">-</button>
+                            <span class="text-xs font-black">${i.qty}</span>
+                            <button onclick="updateQty('${i.id}', 1)" class="w-8 h-8 border border-neutral-200 flex items-center justify-center text-xs hover:bg-black hover:text-white transition">+</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+            if (items.length === 0) container.innerHTML = `<p class="text-[10px] font-black uppercase opacity-20 text-center py-24 tracking-[0.3em]">Studio Bag is Empty</p>`;
+            document.getElementById('cartTotal').innerText = `₹${total.toLocaleString()}`;
+            document.getElementById('cartCount').innerText = count;
+        }
+
+        function openCartUI() { document.getElementById('cartOverlay').classList.remove('hidden'); setTimeout(() => document.getElementById('cartOverlay').classList.add('opacity-100'), 10); document.getElementById('cartDrawer').classList.remove('translate-x-full'); }
+        function closeCartUI() { document.getElementById('cartOverlay').classList.remove('opacity-100'); document.getElementById('cartDrawer').classList.add('translate-x-full'); setTimeout(() => document.getElementById('cartOverlay').classList.add('hidden'), 500); }
+        document.getElementById('openCart').onclick = openCartUI;
+        document.getElementById('closeCart').onclick = closeCartUI;
+        document.getElementById('cartOverlay').onclick = closeCartUI;
+
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('shutter-top').classList.add('shutter-open-top');
+                document.getElementById('shutter-bottom').classList.add('shutter-open-bottom');
+                document.getElementById('loader-logo').style.opacity = '0';
+            }, 1000);
+            renderProducts();
+        };
     </script>
 </body>
 </html>
+
+```
