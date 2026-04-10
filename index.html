@@ -7,25 +7,47 @@
     <title>DUNK'S | Street Luxury Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         @keyframes infinite-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .animate-infinite-scroll { animation: infinite-scroll 40s linear infinite; }
+        
+        /* Shutter System */
         #shutter-container { position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; pointer-events: none; }
         .shutter-half { flex: 1; background: black; transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1); pointer-events: all; }
         .shutter-open-top { transform: translateY(-100%); }
         .shutter-open-bottom { transform: translateY(100%); }
+        
+        /* Entry Gate Styles */
+        #entryGate { position: fixed; inset: 0; z-index: 20000; background: black; display: flex; align-items: center; justify-content: center; padding: 1.5rem; transition: opacity 0.8s ease; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .modal-blur { backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="bg-white text-black antialiased">
+<body class="bg-white text-black antialiased overflow-hidden">
 
-    <!-- Preloader -->
+    <!-- Entry Gate (T&C) -->
+    <div id="entryGate">
+        <div class="max-w-md w-full text-white text-center">
+            <h1 class="text-4xl font-black italic tracking-tighter mb-8 uppercase">DUNK'S STUDIO</h1>
+            <p class="text-[10px] tracking-[0.2em] uppercase leading-loose opacity-60 mb-12">
+                By entering the studio, you acknowledge that you have read and agree to our 
+                <a href="#" class="underline underline-offset-4 hover:opacity-100 transition">Terms & Conditions</a> 
+                and Privacy Policy regarding Drop 001.
+            </p>
+            <button id="acceptTerms" class="w-full border border-white/20 py-4 text-[10px] font-black uppercase tracking-[0.4em] hover:bg-white hover:text-black transition duration-700">
+                Accept & Enter
+            </button>
+        </div>
+    </div>
+
+    <!-- Preloader (Shutter) -->
     <div id="shutter-container">
-        <div id="loader-logo" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] text-white text-center transition-opacity duration-700">
+        <div id="loader-logo" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] text-white text-center opacity-0 transition-opacity duration-700">
             <h1 class="text-6xl font-black tracking-tighter uppercase italic">DUNK'S</h1>
             <div class="h-0.5 w-12 bg-white mx-auto mt-4 animate-pulse"></div>
         </div>
@@ -46,16 +68,14 @@
         </div>
         
         <div class="h-8 lg:h-12">
-            <svg viewBox="0 0 350 100" class="h-full w-auto">
-                <text x="10" y="75" style="font-family: Arial Black; font-size: 80px; font-weight: 900; fill: black; letter-spacing: -4px;">DUNKS</text>
-            </svg>
+            <h1 class="text-3xl font-black tracking-tighter italic">DUNKS</h1>
         </div>
 
         <div class="flex items-center space-x-6">
             <div id="authSection">
                 <button id="loginBtn" class="text-[10px] font-black uppercase tracking-widest border-b-2 border-black pb-0.5">Login</button>
                 <div id="userProfile" class="hidden items-center space-x-3">
-                    <img id="userImg" class="w-7 h-7 rounded-full grayscale border border-black/10" src="">
+                    <img id="userImg" class="w-7 h-7 rounded-full border border-black/10" src="">
                     <button id="logoutBtn" class="text-[9px] font-bold uppercase opacity-30 hover:opacity-100 transition">Out</button>
                 </div>
             </div>
@@ -66,9 +86,9 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="relative h-[90vh] bg-neutral-100 flex items-center justify-center overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" class="absolute inset-0 w-full h-full object-cover grayscale contrast-125 brightness-75" alt="Hero">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" class="absolute inset-0 w-full h-full object-cover contrast-125 brightness-75" alt="Hero">
         <div class="relative z-10 text-center text-white mix-blend-difference px-6">
             <h1 class="text-8xl md:text-[14rem] font-black tracking-tighter leading-none uppercase italic">STUDIO</h1>
             <p class="text-[12px] tracking-[0.5em] font-bold uppercase mt-4">Crafted In India / Drop 001</p>
@@ -84,36 +104,17 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12" id="productGrid"></div>
     </section>
 
-    <!-- Infinite Scroll Marquee -->
-    <section class="bg-black text-white py-24 overflow-hidden select-none border-y border-white/10">
-        <div class="whitespace-nowrap flex animate-infinite-scroll">
-            <h2 class="text-[12vw] font-black tracking-tighter leading-none opacity-20 mx-8 uppercase italic">DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO</h2>
-        </div>
-    </section>
-
-    <!-- Detailed Footer -->
+    <!-- Footer -->
     <footer class="bg-white pt-32 pb-12 px-6 lg:px-24 border-t border-gray-100">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
-            <div class="col-span-1 md:col-span-1">
+            <div>
                 <h4 class="text-2xl font-black tracking-tighter uppercase italic mb-6">Dunk's</h4>
-                <p class="text-xs font-medium text-neutral-400 leading-relaxed uppercase tracking-widest">Experimental Streetwear Studio. Redefining the Indian luxury landscape through heavy-weight silhouettes.</p>
-            </div>
-            <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
-                <h4 class="text-neutral-300">Navigation</h4>
-                <a href="#" class="hover:text-neutral-400">Shop All</a>
-                <a href="#" class="hover:text-neutral-400">Studio Journal</a>
-                <a href="#" class="hover:text-neutral-400">Archive</a>
+                <p class="text-xs font-medium text-neutral-400 leading-relaxed uppercase tracking-widest">Experimental Streetwear Studio. Redefining the Indian luxury landscape.</p>
             </div>
             <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
                 <h4 class="text-neutral-300">Support</h4>
                 <a href="#" class="hover:text-neutral-400">Shipping Info</a>
                 <a href="#" class="hover:text-neutral-400">Returns</a>
-                <a href="#" class="hover:text-neutral-400">Contact</a>
-            </div>
-            <div class="flex flex-col space-y-4 text-[10px] font-black uppercase tracking-[0.2em]">
-                <h4 class="text-neutral-300">Connect</h4>
-                <a href="#" class="hover:text-neutral-400">Instagram</a>
-                <a href="#" class="hover:text-neutral-400">TikTok</a>
             </div>
         </div>
         <div class="pt-12 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-neutral-300 uppercase tracking-[0.3em]">
@@ -135,23 +136,53 @@
                 <span>Subtotal</span>
                 <span id="cartTotal">₹0</span>
             </div>
-            <button class="w-full bg-black text-white py-6 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-neutral-800 transition shadow-xl">Proceed to Checkout</button>
+            <button id="checkoutBtn" class="w-full bg-black text-white py-6 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-neutral-800 transition shadow-xl">Proceed to Checkout</button>
         </div>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAZPYLEuSJJcQukGCMvp7QtZOs2NJMOTKQ",
-            authDomain: "dunk-s-official.firebaseapp.com",
-            projectId: "dunk-s-official",
-            storageBucket: "dunk-s-official.firebasestorage.app",
-            messagingSenderId: "85618157832",
-            appId: "1:85618157832:web:f649f2ea4099db5e81a4bd"
-        };
-        firebase.initializeApp(firebaseConfig);
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 modal-blur bg-black/40">
+        <div class="bg-white w-full max-w-lg p-10 relative shadow-2xl">
+            <button id="closeCheckout" class="absolute top-6 right-6 text-xl">✕</button>
+            <h2 class="text-3xl font-black italic uppercase tracking-tighter mb-2">Delivery Details</h2>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-8 italic">Method: Cash on Delivery</p>
+            
+            <form id="orderForm" class="space-y-6">
+                <div>
+                    <label class="block text-[9px] font-black uppercase tracking-[0.2em] mb-2">Full Name</label>
+                    <input type="text" id="custName" required class="w-full border-b border-black py-2 focus:outline-none text-sm font-medium" placeholder="E.G. ARJUN SHARMA">
+                </div>
+                <div>
+                    <label class="block text-[9px] font-black uppercase tracking-[0.2em] mb-2">Phone Number</label>
+                    <input type="tel" id="custPhone" required pattern="[0-9]{10}" class="w-full border-b border-black py-2 focus:outline-none text-sm font-medium" placeholder="10 DIGIT MOBILE">
+                </div>
+                <div>
+                    <label class="block text-[9px] font-black uppercase tracking-[0.2em] mb-2">Shipping Address</label>
+                    <textarea id="custAddress" required class="w-full border-b border-black py-2 focus:outline-none text-sm font-medium h-24 resize-none" placeholder="STREET, AREA, CITY, PINCODE"></textarea>
+                </div>
+                <button type="submit" id="confirmOrderBtn" class="w-full bg-black text-white py-5 text-[10px] font-black uppercase tracking-[0.3em] hover:bg-neutral-800 transition">Place COD Order</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Success -->
+    <div id="successOverlay" class="fixed inset-0 z-[1100] bg-white hidden flex-col items-center justify-center p-12 text-center">
+        <div class="w-20 h-20 border-2 border-black rounded-full flex items-center justify-center mb-8">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <h2 class="text-4xl font-black italic tracking-tighter uppercase mb-4">Order Received</h2>
+        <p id="successMsg" class="text-xs text-neutral-500 uppercase font-bold tracking-[0.2em] max-w-sm leading-loose mb-12"></p>
+        <button id="backToStudio" class="border border-black px-12 py-4 text-[10px] font-black uppercase tracking-[0.4em] hover:bg-black hover:text-white transition">Back to Studio</button>
+    </div>
+
+    <script type="module">
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
         const provider = new firebase.auth.GoogleAuthProvider();
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'dunks-studio';
+        const apiKey = "";
 
         const PRODUCTS = [
             { id: 'p1', name: 'Archive Box Tee', price: 2499, img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800', type: 'NEW' },
@@ -160,35 +191,77 @@
             { id: 'p4', name: 'Studio White', price: 1999, img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800', type: 'NEW' }
         ];
 
-        let cartUnsub = null;
-        auth.onAuthStateChanged(user => {
+        let currentCart = [];
+
+        // START SEQUENCE: T&C -> SHUTTER -> STUDIO
+        document.getElementById('acceptTerms').onclick = () => {
+            // 1. Hide Entry Gate
+            const gate = document.getElementById('entryGate');
+            gate.style.opacity = '0';
+            gate.style.pointerEvents = 'none';
+            
+            // 2. Start Shutter Animation
+            const logo = document.getElementById('loader-logo');
+            logo.style.opacity = '1';
+            
+            setTimeout(() => {
+                // Open Shutters
+                document.getElementById('shutter-top').classList.add('shutter-open-top');
+                document.getElementById('shutter-bottom').classList.add('shutter-open-bottom');
+                logo.style.opacity = '0';
+                document.body.classList.remove('overflow-hidden');
+                
+                // Final Cleanup
+                setTimeout(() => {
+                    gate.classList.add('hidden');
+                }, 1200);
+            }, 1500); // Duration logo stays visible
+        };
+
+        // Firebase Auth
+        auth.onAuthStateChanged(async user => {
+            if (!user) {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await auth.signInWithCustomToken(__initial_auth_token);
+                } else {
+                    await auth.signInAnonymously();
+                }
+            }
+            updateAuthUI(user);
+            if (user) syncCart(user.uid);
+        });
+
+        function updateAuthUI(user) {
             const loginBtn = document.getElementById('loginBtn');
             const profile = document.getElementById('userProfile');
-            if (user) {
+            if (user && !user.isAnonymous) {
                 loginBtn.classList.add('hidden');
                 profile.classList.replace('hidden', 'flex');
-                document.getElementById('userImg').src = user.photoURL;
-                if (cartUnsub) cartUnsub();
-                cartUnsub = db.collection('carts').doc(user.uid).collection('items').onSnapshot(snap => {
-                    const items = snap.docs.map(d => ({...d.data(), id: d.id}));
-                    renderCart(items);
-                });
+                document.getElementById('userImg').src = user.photoURL || 'https://via.placeholder.com/150';
             } else {
                 loginBtn.classList.remove('hidden');
                 profile.classList.replace('flex', 'hidden');
-                if (cartUnsub) cartUnsub();
-                renderCart([]);
             }
-        });
+        }
 
         document.getElementById('loginBtn').onclick = () => auth.signInWithPopup(provider);
         document.getElementById('logoutBtn').onclick = () => auth.signOut();
 
+        // Cart Syncing
+        function syncCart(uid) {
+            db.collection('artifacts').doc(appId).collection('users').doc(uid).collection('cart')
+              .onSnapshot(snap => {
+                  currentCart = snap.docs.map(d => ({...d.data(), id: d.id}));
+                  renderCart(currentCart);
+              }, err => console.error("Cart Error:", err));
+        }
+
+        // Product Rendering (Color default -> Grayscale hover)
         function renderProducts() {
             document.getElementById('productGrid').innerHTML = PRODUCTS.map(p => `
                 <div class="group cursor-pointer" onclick="addToBag('${p.id}')">
                     <div class="aspect-[3/4] bg-neutral-100 overflow-hidden relative mb-6">
-                        <img src="${p.img}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out">
+                        <img src="${p.img}" class="w-full h-full object-cover transition-all duration-1000 ease-out group-hover:grayscale group-hover:scale-110">
                         <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black uppercase tracking-widest">${p.type}</div>
                         <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <span class="bg-white text-black text-[10px] font-black px-8 py-4 uppercase tracking-[0.2em] transform translate-y-4 group-hover:translate-y-0 transition-transform">Add to Bag</span>
@@ -207,25 +280,28 @@
 
         async function addToBag(id) {
             const user = auth.currentUser;
-            if (!user) {
+            if (user.isAnonymous) {
                 auth.signInWithPopup(provider);
                 return;
             }
             const product = PRODUCTS.find(p => p.id === id);
-            const ref = db.collection('carts').doc(user.uid).collection('items').doc(id);
+            const ref = db.collection('artifacts').doc(appId).collection('users').doc(user.uid).collection('cart').doc(id);
             const snap = await ref.get();
-            if (snap.exists) await ref.update({ qty: firebase.firestore.FieldValue.increment(1) });
-            else await ref.set({ ...product, qty: 1 });
+            if (snap.exists) {
+                await ref.update({ qty: firebase.firestore.FieldValue.increment(1) });
+            } else {
+                await ref.set({ ...product, qty: 1 });
+            }
             openCartUI();
         }
 
-        async function updateQty(id, delta) {
-            const ref = db.collection('carts').doc(auth.currentUser.uid).collection('items').doc(id);
+        window.updateQty = async (id, delta) => {
+            const ref = db.collection('artifacts').doc(appId).collection('users').doc(auth.currentUser.uid).collection('cart').doc(id);
             const snap = await ref.get();
             const newQty = (snap.data().qty || 1) + delta;
             if (newQty <= 0) await ref.delete();
             else await ref.update({ qty: newQty });
-        }
+        };
 
         function renderCart(items) {
             let total = 0; let count = 0;
@@ -235,7 +311,7 @@
                 return `
                 <div class="flex gap-6 items-center">
                     <div class="w-24 h-32 bg-neutral-100 overflow-hidden">
-                        <img src="${i.img}" class="w-full h-full object-cover grayscale">
+                        <img src="${i.img}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-grow">
                         <h4 class="text-[11px] font-black uppercase tracking-wider mb-1">${i.name}</h4>
@@ -253,6 +329,76 @@
             document.getElementById('cartCount').innerText = count;
         }
 
+        // Checkout Logic
+        document.getElementById('checkoutBtn').onclick = () => {
+            if (currentCart.length === 0) return;
+            document.getElementById('checkoutModal').classList.replace('hidden', 'flex');
+        };
+        document.getElementById('closeCheckout').onclick = () => document.getElementById('checkoutModal').classList.replace('flex', 'hidden');
+
+        document.getElementById('orderForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('confirmOrderBtn');
+            btn.disabled = true;
+            btn.innerText = "PROCESSING ARCHIVE...";
+
+            const orderData = {
+                customer: {
+                    name: document.getElementById('custName').value,
+                    phone: document.getElementById('custPhone').value,
+                    address: document.getElementById('custAddress').value,
+                    email: auth.currentUser.email
+                },
+                items: currentCart,
+                total: document.getElementById('cartTotal').innerText,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Save Order
+                await db.collection('artifacts').doc(appId).collection('public').doc('orders').collection('all').add(orderData);
+
+                // Gemini Confirmation Message
+                const prompt = `A customer named ${orderData.customer.name} ordered COD at DUNK'S: ${currentCart.map(i => `${i.qty}x ${i.name}`).join(', ')}. Write an elite, formal "Thank You" message for them. Mention their order is logged for Drop 001. Keep it very short and high-end.`;
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                
+                const result = await response.json();
+                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Order confirmed. Our studio archives have been updated.";
+
+                // Clear Cart
+                const batch = db.batch();
+                currentCart.forEach(item => {
+                    const ref = db.collection('artifacts').doc(appId).collection('users').doc(auth.currentUser.uid).collection('cart').doc(item.id);
+                    batch.delete(ref);
+                });
+                await batch.commit();
+
+                // UI feedback
+                document.getElementById('successMsg').innerText = aiText;
+                document.getElementById('checkoutModal').classList.add('hidden');
+                document.getElementById('cartDrawer').classList.add('translate-x-full');
+                document.getElementById('cartOverlay').classList.add('hidden');
+                document.getElementById('successOverlay').classList.remove('hidden');
+
+            } catch (err) {
+                console.error(err);
+                alert("Order failed. Please try again.");
+            } finally {
+                btn.disabled = false;
+                btn.innerText = "PLACE COD ORDER";
+            }
+        };
+
+        document.getElementById('backToStudio').onclick = () => {
+            document.getElementById('successOverlay').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
         function openCartUI() { document.getElementById('cartOverlay').classList.remove('hidden'); setTimeout(() => document.getElementById('cartOverlay').classList.add('opacity-100'), 10); document.getElementById('cartDrawer').classList.remove('translate-x-full'); }
         function closeCartUI() { document.getElementById('cartOverlay').classList.remove('opacity-100'); document.getElementById('cartDrawer').classList.add('translate-x-full'); setTimeout(() => document.getElementById('cartOverlay').classList.add('hidden'), 500); }
         document.getElementById('openCart').onclick = openCartUI;
@@ -260,11 +406,6 @@
         document.getElementById('cartOverlay').onclick = closeCartUI;
 
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('shutter-top').classList.add('shutter-open-top');
-                document.getElementById('shutter-bottom').classList.add('shutter-open-bottom');
-                document.getElementById('loader-logo').style.opacity = '0';
-            }, 1000);
             renderProducts();
         };
     </script>
