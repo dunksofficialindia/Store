@@ -1,257 +1,249 @@
-```react
-import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingBag, Search, Menu, X, ArrowRight, Instagram, ChevronDown, Plus } from 'lucide-react';
-
-const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('ALL');
-
-  // Custom Logo Component - High Fidelity Recreation of the Pencil Sketch
-  const Logo = ({ className = "h-8" }) => (
-    <div className={`relative flex items-center ${className}`}>
-      <svg viewBox="0 0 350 100" className="h-full w-auto drop-shadow-sm">
-        <text 
-          x="10" y="75" 
-          style={{ 
-            fontFamily: '"Arial Black", "Inter", sans-serif', 
-            fontSize: '70px', 
-            fontWeight: '900',
-            fill: 'white',
-            stroke: 'black',
-            strokeWidth: '2.5px',
-            letterSpacing: '-2px'
-          }}
-        >
-          DUN
-          <tspan dx="-2">K</tspan>
-          <tspan dx="2">'S</tspan>
-        </text>
-        {/* The Precise Cut on the 'K' */}
-        <path 
-          d="M145 20 L185 85" 
-          stroke="black" 
-          strokeWidth="6" 
-          strokeLinecap="square"
-        />
-      </svg>
-    </div>
-  );
-
-  const products = [
-    { id: 1, name: "ARCHIVE BOX TEE", price: "2,499", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=800", category: "NEW" },
-    { id: 2, name: "HEAVYWEIGHT OVERSIZE", price: "3,200", img: "https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&q=80&w=800", category: "BEST" },
-    { id: 3, name: "DUNK'S SIGNATURE BLACK", price: "2,800", img: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&q=80&w=800", category: "LIMITED" },
-    { id: 4, name: "CORE ESSENTIAL WHITE", price: "1,999", img: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=800", category: "NEW" },
-  ];
-
-  return (
-    <div className="bg-white text-black font-sans antialiased overflow-x-hidden">
-      {/* Editorial Announcement Bar */}
-      <div className="bg-black text-white py-2 px-4 text-[10px] tracking-[0.3em] font-bold text-center uppercase border-b border-black">
-        Free Worldwide Shipping on Orders Above ₹5000 — Limited Drop 001
-      </div>
-
-      {/* Navigation - Minimal & High End */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 px-6 py-4 lg:px-12 flex justify-between items-center">
-        <div className="hidden lg:flex items-center space-x-8 text-[11px] font-bold tracking-widest">
-          <a href="#" className="hover:opacity-50 transition underline-offset-8 decoration-1 hover:underline">SHOP</a>
-          <a href="#" className="hover:opacity-50 transition underline-offset-8 decoration-1 hover:underline">COLLECTIONS</a>
-          <a href="#" className="hover:opacity-50 transition underline-offset-8 decoration-1 hover:underline">JOURNAL</a>
-        </div>
-
-        <Logo className="h-8 lg:h-12" />
-
-        <div className="flex items-center space-x-6">
-          <Search className="w-5 h-5 cursor-pointer hidden lg:block" />
-          <div className="relative cursor-pointer">
-            <ShoppingBag className="w-5 h-5" />
-            <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 flex items-center justify-center rounded-full">0</span>
-          </div>
-          <button onClick={() => setIsMenuOpen(true)} className="lg:hidden">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </nav>
-
-      {/* Hero - Editorial Focus */}
-      <section className="relative h-[90vh] bg-[#f2f2f2] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" 
-            className="w-full h-full object-cover object-top opacity-90 grayscale hover:grayscale-0 transition-all duration-1000"
-            alt="Hero Streetwear"
-          />
-        </div>
-        <div className="relative z-10 text-center text-white mix-blend-difference px-6">
-          <h1 className="text-8xl md:text-[14rem] font-black tracking-tighter leading-[0.8] mb-8">
-            STREET <br/> LUXURY
-          </h1>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
-            <button className="bg-white text-black px-12 py-5 font-bold text-xs tracking-[0.2em] hover:bg-black hover:text-white transition-all duration-300 uppercase shadow-2xl">
-              Shop The Drop
-            </button>
-            <button className="text-white border border-white/40 px-12 py-5 font-bold text-xs tracking-[0.2em] backdrop-blur-sm hover:bg-white hover:text-black transition-all uppercase">
-              Lookbook 2026
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Brand Ethos - Snitch/Lacoste Style */}
-      <section className="py-20 px-6 lg:px-24">
-        <div className="flex flex-col lg:flex-row justify-between items-start border-b border-black pb-12 gap-8">
-          <h2 className="text-4xl lg:text-6xl font-black tracking-tighter max-w-xl uppercase leading-[0.9]">
-            The New Standard in Streetwear.
-          </h2>
-          <div className="max-w-sm">
-            <p className="text-sm text-gray-600 leading-relaxed mb-6">
-              Dunk's represents the collision of raw street culture and high-end tailoring. Our fits are engineered for comfort, designed for impact. 
-            </p>
-            <div className="flex items-center font-bold text-xs tracking-widest cursor-pointer group uppercase">
-              About the Brand <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Product Grid - Premium Snitch-Inspired */}
-      <section className="px-6 lg:px-24 py-12">
-        <div className="flex justify-between items-center mb-10">
-          <div className="flex space-x-6 text-[10px] font-black tracking-widest uppercase">
-            {['ALL', 'TEES', 'HOODIES', 'LIMITED'].map(cat => (
-              <button 
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`pb-1 border-b-2 transition-all ${activeCategory === cat ? 'border-black' : 'border-transparent text-gray-400'}`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="hidden lg:flex items-center text-[10px] font-bold tracking-widest text-gray-400 uppercase">
-            Filter <Plus className="ml-1 w-3 h-3" />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8">
-          {products.map((product) => (
-            <div key={product.id} className="group flex flex-col cursor-pointer">
-              <div className="relative overflow-hidden aspect-[3/4] bg-gray-100 mb-6 transition-all duration-700">
-                <img 
-                  src={product.img} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  alt={product.name}
-                />
-                <div className="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black tracking-widest uppercase shadow-sm">
-                  {product.category}
-                </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                   <button className="bg-white text-black text-[10px] font-black tracking-widest px-6 py-3 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 uppercase">
-                      Quick Add
-                   </button>
-                </div>
-              </div>
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-xs font-bold tracking-tight mb-1 uppercase group-hover:underline decoration-1 underline-offset-4 transition-all">
-                    {product.name}
-                  </h3>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Streetwear Tee</p>
-                </div>
-                <p className="text-xs font-black">₹{product.price}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Big Typo Break - High Fashion Aesthetic */}
-      <section className="bg-black text-white py-32 overflow-hidden select-none">
-        <div className="whitespace-nowrap flex animate-infinite-scroll">
-          {[1,2,3].map(i => (
-            <h2 key={i} className="text-[15vw] font-black tracking-tighter leading-none opacity-20 mx-8 uppercase">
-              DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO
-            </h2>
-          ))}
-        </div>
-      </section>
-
-      {/* Footer - Minimal & Structured */}
-      <footer className="bg-white border-t border-gray-100 pt-24 pb-12 px-6 lg:px-24">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-20">
-          <div className="col-span-2 md:col-span-1">
-            <Logo className="h-10 mb-8" />
-            <p className="text-[11px] text-gray-400 leading-relaxed uppercase tracking-widest">
-              Designing the future of Indian streetwear. Meticulously engineered for the streets.
-            </p>
-          </div>
-          <div className="flex flex-col space-y-4 text-[10px] font-bold tracking-[0.2em] uppercase">
-            <h4 className="text-gray-400 mb-2">Shop</h4>
-            <a href="#" className="hover:opacity-50">New Arrivals</a>
-            <a href="#" className="hover:opacity-50">Best Sellers</a>
-            <a href="#" className="hover:opacity-50">Collections</a>
-          </div>
-          <div className="flex flex-col space-y-4 text-[10px] font-bold tracking-[0.2em] uppercase">
-            <h4 className="text-gray-400 mb-2">Support</h4>
-            <a href="#" className="hover:opacity-50">Shipping</a>
-            <a href="#" className="hover:opacity-50">Returns</a>
-            <a href="#" className="hover:opacity-50">Contact</a>
-          </div>
-          <div className="flex flex-col space-y-4 text-[10px] font-bold tracking-[0.2em] uppercase">
-            <h4 className="text-gray-400 mb-2">Social</h4>
-            <a href="#" className="hover:opacity-50 inline-flex items-center tracking-widest"><Instagram className="w-3 h-3 mr-2" /> Instagram</a>
-            <a href="#" className="hover:opacity-50">TikTok</a>
-            <a href="#" className="hover:opacity-50 underline decoration-1 underline-offset-4">Join The Club</a>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between items-center text-[8px] font-bold tracking-[0.3em] text-gray-400 uppercase pt-12 border-t border-gray-100">
-          <p>© 2026 Dunk's Streetwear. Crafted in India.</p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <span>Privacy Policy</span>
-            <span>Terms of Service</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Fullscreen Mobile Menu */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-white px-8 py-12 flex flex-col">
-          <div className="flex justify-between items-center mb-20">
-            <Logo className="h-8" />
-            <X onClick={() => setIsMenuOpen(false)} className="w-8 h-8 cursor-pointer" />
-          </div>
-          <div className="flex flex-col space-y-8 text-5xl font-black tracking-tighter uppercase">
-            <a href="#" onClick={() => setIsMenuOpen(false)}>Shop</a>
-            <a href="#" onClick={() => setIsMenuOpen(false)}>Drops</a>
-            <a href="#" onClick={() => setIsMenuOpen(false)}>Archive</a>
-            <a href="#" onClick={() => setIsMenuOpen(false)}>Contact</a>
-          </div>
-          <div className="mt-auto flex justify-between items-end border-t border-black pt-8">
-            <div className="text-[10px] font-black tracking-widest uppercase">
-              Instagram<br/>Twitter<br/>Youtube
-            </div>
-            <div className="text-right text-[10px] font-black tracking-widest uppercase">
-              Language: EN<br/>Currency: INR
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Infinite Scroll CSS Helper */}
-      <style dangerouslySetInnerHTML={{ __html: `
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUNK'S | Street Luxury Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         @keyframes infinite-scroll {
-          from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
         }
         .animate-infinite-scroll {
-          animation: infinite-scroll 40s linear infinite;
+            animation: infinite-scroll 30s linear infinite;
         }
-      ` }} />
-    </div>
-  );
-};
+        .text-outline {
+            -webkit-text-stroke: 2px black;
+            color: white;
+        }
+        .logo-cut {
+            clip-path: polygon(0 0, 44% 0, 52% 100%, 0% 100%);
+        }
+    </style>
+</head>
+<body class="bg-white text-black antialiased">
 
-export default App;
+    <!-- Editorial Announcement Bar -->
+    <div class="bg-black text-white py-2 px-4 text-[10px] tracking-[0.3em] font-bold text-center uppercase">
+        Free Worldwide Shipping on Orders Above ₹5000 — Limited Drop 001
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="sticky top-0 z-50 bg-white transition-all duration-300 px-6 py-4 lg:px-12 flex justify-between items-center border-b border-gray-100">
+        <div class="hidden lg:flex items-center space-x-8 text-[11px] font-bold tracking-widest">
+            <a href="#" class="hover:opacity-50 transition">SHOP</a>
+            <a href="#" class="hover:opacity-50 transition">COLLECTIONS</a>
+            <a href="#" class="hover:opacity-50 transition">JOURNAL</a>
+        </div>
+
+        <!-- Logo -->
+        <div class="h-8 lg:h-12 flex items-center">
+            <svg viewBox="0 0 350 100" class="h-full w-auto">
+                <text x="10" y="75" style="font-family: Arial Black; font-size: 70px; font-weight: 900; fill: white; stroke: black; stroke-width: 2.5px; letter-spacing: -2px;">
+                    DUN<tspan dx="-2">K</tspan><tspan dx="2">'S</tspan>
+                </text>
+                <path d="M145 20 L185 85" stroke="black" stroke-width="6" />
+            </svg>
+        </div>
+
+        <div class="flex items-center space-x-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer hidden lg:block"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <div class="relative cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                <span class="absolute -top-1 -right-1 bg-black text-white text-[8px] w-3.5 h-3.5 flex items-center justify-center rounded-full font-bold">0</span>
+            </div>
+            <button class="lg:hidden" id="menuBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-[90vh] bg-[#f2f2f2] flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" class="w-full h-full object-cover object-top opacity-90 grayscale" alt="Hero">
+        </div>
+        <div class="relative z-10 text-center text-white mix-blend-difference px-6">
+            <h1 class="text-7xl md:text-[14rem] font-black tracking-tighter leading-[0.8] mb-8 uppercase">
+                STREET <br> LUXURY
+            </h1>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 mt-12">
+                <button class="bg-white text-black px-12 py-5 font-bold text-[10px] tracking-[0.2em] hover:bg-black hover:text-white transition-all duration-300 uppercase">
+                    Shop The Drop
+                </button>
+                <button class="text-white border border-white/40 px-12 py-5 font-bold text-[10px] tracking-[0.2em] backdrop-blur-sm hover:bg-white hover:text-black transition-all uppercase">
+                    Lookbook 2026
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ethos Section -->
+    <section class="py-24 px-6 lg:px-24">
+        <div class="flex flex-col lg:flex-row justify-between items-start border-b border-black pb-12 gap-8">
+            <h2 class="text-4xl lg:text-6xl font-black tracking-tighter max-w-xl uppercase leading-[0.9]">
+                The New Standard in Streetwear.
+            </h2>
+            <div class="max-w-sm">
+                <p class="text-sm text-gray-600 leading-relaxed mb-6">
+                    Dunk's represents the collision of raw street culture and high-end tailoring. Our fits are engineered for comfort, designed for impact. 
+                </p>
+                <div class="flex items-center font-bold text-xs tracking-widest cursor-pointer group uppercase underline underline-offset-8">
+                    About the Brand
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <section class="px-6 lg:px-24 py-12">
+        <div class="flex justify-between items-center mb-10">
+            <div class="flex space-x-6 text-[10px] font-black tracking-widest uppercase">
+                <button class="pb-1 border-b-2 border-black">ALL</button>
+                <button class="pb-1 border-b-2 border-transparent text-gray-400">TEES</button>
+                <button class="pb-1 border-b-2 border-transparent text-gray-400">HOODIES</button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8">
+            <!-- Product 1 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[3/4] bg-gray-100 mb-6">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black tracking-widest uppercase">NEW</div>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xs font-bold tracking-tight mb-1 uppercase">ARCHIVE BOX TEE</h3>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Heavy Cotton</p>
+                    </div>
+                    <p class="text-xs font-black">₹2,499</p>
+                </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[3/4] bg-gray-100 mb-6">
+                    <img src="https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black tracking-widest uppercase">BEST</div>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xs font-bold tracking-tight mb-1 uppercase">HEAVYWEIGHT OVERSIZE</h3>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Street Cut</p>
+                    </div>
+                    <p class="text-xs font-black">₹3,200</p>
+                </div>
+            </div>
+            <!-- Product 3 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[3/4] bg-gray-100 mb-6">
+                    <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black tracking-widest uppercase">LIMITED</div>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xs font-bold tracking-tight mb-1 uppercase">SIGNATURE BLACK</h3>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Studio Series</p>
+                    </div>
+                    <p class="text-xs font-black">₹2,800</p>
+                </div>
+            </div>
+            <!-- Product 4 -->
+            <div class="group cursor-pointer">
+                <div class="relative overflow-hidden aspect-[3/4] bg-gray-100 mb-6">
+                    <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute top-4 left-4 bg-white px-2 py-1 text-[8px] font-black tracking-widest uppercase">NEW</div>
+                </div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-xs font-bold tracking-tight mb-1 uppercase">ESSENTIAL WHITE</h3>
+                        <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Daily Wear</p>
+                    </div>
+                    <p class="text-xs font-black">₹1,999</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Infinite Scroll -->
+    <section class="bg-black text-white py-32 overflow-hidden select-none">
+        <div class="whitespace-nowrap flex animate-infinite-scroll">
+            <h2 class="text-[15vw] font-black tracking-tighter leading-none opacity-20 mx-8 uppercase">DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO DUNK'S STUDIO</h2>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-100 pt-24 pb-12 px-6 lg:px-24 text-[10px] font-bold tracking-widest">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="md:col-span-1 uppercase">
+                <h4 class="mb-4">DUNK'S STREETWEAR</h4>
+                <p class="text-gray-400 leading-relaxed font-medium">Designing the future of Indian streetwear. Meticulously engineered for the streets.</p>
+            </div>
+            <div class="flex flex-col space-y-4 uppercase">
+                <h4 class="text-gray-400">Shop</h4>
+                <a href="#">New Arrivals</a>
+                <a href="#">Best Sellers</a>
+            </div>
+            <div class="flex flex-col space-y-4 uppercase">
+                <h4 class="text-gray-400">Support</h4>
+                <a href="#">Shipping</a>
+                <a href="#">Returns</a>
+            </div>
+            <div class="flex flex-col space-y-4 uppercase">
+                <h4 class="text-gray-400">Social</h4>
+                <a href="#">Instagram</a>
+                <a href="#">TikTok</a>
+            </div>
+        </div>
+        <div class="pt-12 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center text-gray-400 uppercase gap-4 tracking-[0.3em]">
+            <p>© 2026 Dunk's Streetwear Studio.</p>
+            <p>Crafted in India</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobileMenu" class="fixed inset-0 bg-white z-[100] hidden flex flex-col p-8">
+        <div class="flex justify-between items-center mb-20">
+            <span class="font-black text-2xl tracking-tighter">DUNK'S</span>
+            <button id="closeMenu">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="flex flex-col space-y-8 text-5xl font-black tracking-tighter uppercase">
+            <a href="#">Shop</a>
+            <a href="#">Drops</a>
+            <a href="#">Archive</a>
+            <a href="#">Contact</a>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenu = document.getElementById('closeMenu');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => mobileMenu.classList.remove('hidden'));
+        closeMenu.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2', 'bg-white/90', 'backdrop-blur-md');
+                navbar.classList.remove('py-4');
+            } else {
+                navbar.classList.add('py-4');
+                navbar.classList.remove('py-2', 'bg-white/90', 'backdrop-blur-md');
+            }
+        });
+    </script>
+</body>
+</html>
 
 ```
 
