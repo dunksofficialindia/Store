@@ -4,15 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUNK'S | Street Luxury Studio</title>
+    <title>VENTABLACK | Street Luxury Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Firebase Compat SDKs (Retained for Auth features if needed) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Permanent+Marker&display=swap" rel="stylesheet">
+    <!-- Firebase Compat SDKs (Retained for Auth features) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <style>
         body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .logo-font { font-family: 'Permanent Marker', cursive; }
+        
         @keyframes infinite-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .animate-infinite-scroll { animation: infinite-scroll 40s linear infinite; }
         
@@ -30,6 +32,9 @@
         .modal-blur { backdrop-filter: blur(10px); }
         .terms-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
         .terms-content.open { max-height: 400px; overflow-y: auto; margin-bottom: 2rem; }
+
+        /* Mobile Logo Scaling */
+        .nav-logo { font-size: clamp(1.25rem, 5vw, 1.875rem); }
     </style>
 </head>
 <body class="bg-white text-black antialiased overflow-hidden">
@@ -37,11 +42,12 @@
     <!-- Entry Gate (T&C) -->
     <div id="entryGate">
         <div class="max-w-xl w-full text-white text-center">
-            <h1 class="text-4xl font-black italic tracking-tighter mb-4 uppercase">DUNK'S STUDIO</h1>
+            <h1 class="logo-font text-5xl md:text-7xl mb-2">VENTABLACK</h1>
+            <h2 class="text-xs font-black tracking-[0.5em] mb-8 uppercase opacity-60">STUDIO</h2>
             
             <div class="mb-8">
                 <p class="text-[10px] tracking-[0.3em] uppercase opacity-60 leading-relaxed">
-                    To enter our website, you need to accept our <br>
+                    To enter our studio, please review and accept our <br>
                     <button id="toggleTerms" class="text-white underline underline-offset-4 font-black hover:opacity-100 mt-2">TERMS & CONDITIONS</button>
                 </p>
             </div>
@@ -50,28 +56,28 @@
             <div id="termsScript" class="terms-content text-left border-l border-white/20 pl-6 pr-2">
                 <div class="space-y-6 text-[10px] leading-relaxed opacity-80 uppercase tracking-tighter py-4">
                     <div>
-                        <h3 class="font-black mb-1">1. Educational Nature of the Project</h3>
-                        <p>This website and the associated clothing business are part of a purely educational experiment conducted by students (born in 2010). The primary goal is to gain practical experience in web development and business management. This is a self-initiated study project; no educational institution, school, or tuition center has mandated or pressured the creators to start this venture. All operations are conducted during the creators' personal free time.</p>
+                        <h3 class="font-black mb-1">1. VENTABLACK Educational Project</h3>
+                        <p>This platform and the VENTABLACK brand are part of an educational exploration in street-luxury commerce. This project is a self-initiated study by students (born 2010) to master web architecture and brand positioning. It is not affiliated with any formal institution and is managed during personal leisure time.</p>
                     </div>
                     <div>
-                        <h3 class="font-black mb-1">2. Intellectual Property & Technical Disclosure</h3>
-                        <p>No Rights Claimed: We do not hold or claim any legal trademarks or copyrights for the brand name, logos, images, or designs used on this platform. AI Assistance: Significant portions of the creative designs, content, and code have been developed with the assistance of Artificial Intelligence (AI) tools. Technical Infrastructure: This project is a basic prototype hosted on GitHub, utilizing Firebase for backend data management. By using this site, you acknowledge that you are interacting with a student-built technical environment.</p>
+                        <h3 class="font-black mb-1">2. Intellectual Property</h3>
+                        <p>No formal rights are claimed for the VENTABLACK name or designs within this prototype. Creative elements and technical code have been developed with the support of generative AI tools. The infrastructure utilizes GitHub and Firebase for experimental backend operations.</p>
                     </div>
                     <div>
-                        <h3 class="font-black mb-1">3. Order Processing & Cash on Delivery (COD)</h3>
-                        <p>Manual Review: We do not offer automated commercial services. Every order submitted is subject to a manual review. We reserve the right to accept or decline any order at our discretion. Payment Method: We exclusively operate on a Cash on Delivery (COD) basis. An order is only considered "Confirmed" after successful manual verification via phone or messaging.</p>
+                        <h3 class="font-black mb-1">3. Ordering & Fulfillment</h3>
+                        <p>We do not provide automated commercial services. All order submissions are manual inquiries. We exclusively operate on a Cash on Delivery (COD) basis. Orders are only validated after direct communication and manual approval by the studio team.</p>
                     </div>
                     <div>
-                        <h3 class="font-black mb-1">4. No Returns & Quality Disclaimer</h3>
-                        <p>"As-Is" Basis: As this is a learning prototype, we provide no guarantees regarding material quality, print durability, or color accuracy. Products are provided on an "as-is" basis. Final Sale: Once an order is confirmed and processed, it cannot be cancelled. No Returns/Exchanges: We follow a strict No-Return and No-Exchange policy. Due to the experimental nature of this student project, we cannot facilitate refunds or replacements.</p>
+                        <h3 class="font-black mb-1">4. Quality & Return Policy</h3>
+                        <p>As an experimental prototype, VENTABLACK products are provided on an "as-is" basis. We offer no guarantees on material longevity or color fidelity. All sales are final. We maintain a strict no-return, no-exchange policy due to the learning-centric nature of the project.</p>
                     </div>
                     <div>
-                        <h3 class="font-black mb-1">5. Limitation of Liability & Privacy</h3>
-                        <p>Minor Status: The operators of this project are minors (under 18). By using this website, you acknowledge the non-professional status of the service providers. Liability: The creators shall not be held liable for any damages, skin sensitivities, or dissatisfaction arising from the products or the use of this website. Data Security: Personal data (Name, Address, Phone) is stored through Firebase for order fulfillment. While we handle data with care, users provide this information at their own risk, and we do not guarantee absolute data security.</p>
+                        <h3 class="font-black mb-1">5. Liability & Privacy</h3>
+                        <p>The creators are minors. By using this platform, you acknowledge the non-professional status of the service. VENTABLACK shall not be liable for any dissatisfaction or issues arising from product use. User data (Name, Address, Phone) is handled via Firebase strictly for inquiry fulfillment.</p>
                     </div>
                     <div>
-                        <h3 class="font-black mb-1">6. User Acceptance</h3>
-                        <p>By placing an order or browsing this website, you agree that you understand this is a student-led learning experiment and you waive the right to pursue any legal action or commercial claims against the creators.</p>
+                        <h3 class="font-black mb-1">6. Acceptance of Terms</h3>
+                        <p>By entering this site or placing an inquiry, you agree to these terms and waive the right to pursue legal or commercial claims against the student creators of VENTABLACK STUDIO.</p>
                     </div>
                 </div>
             </div>
@@ -85,7 +91,7 @@
     <!-- Preloader (Shutter) -->
     <div id="shutter-container">
         <div id="loader-logo" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[10000] text-white text-center opacity-0 transition-opacity duration-700 pointer-events-none">
-            <h1 class="text-6xl font-black tracking-tighter uppercase italic">DUNK'S</h1>
+            <h1 class="logo-font text-6xl uppercase italic">VENTABLACK</h1>
             <div class="h-0.5 w-12 bg-white mx-auto mt-4 animate-pulse"></div>
         </div>
         <div class="shutter-half" id="shutter-top"></div>
@@ -94,7 +100,7 @@
 
     <!-- Announcement Bar -->
     <div class="bg-black text-white py-2 text-[10px] font-bold tracking-[0.3em] text-center uppercase">
-        Drop 001 Now Available Worldwide
+        VENTABLACK STUDIO — Drop 001 Now Available
     </div>
 
     <!-- Nav -->
@@ -104,8 +110,9 @@
             <a href="#" class="hover:opacity-50 transition">Archive</a>
         </div>
         
-        <div class="h-8 lg:h-12">
-            <h1 class="text-3xl font-black tracking-tighter italic">DUNKS</h1>
+        <div class="flex flex-col items-center">
+            <h1 class="logo-font nav-logo tracking-tighter italic leading-none">VENTABLACK</h1>
+            <span class="text-[7px] font-black tracking-[0.4em] uppercase opacity-40 -mt-1">STUDIO</span>
         </div>
 
         <div class="flex items-center space-x-6">
@@ -127,15 +134,15 @@
     <section class="relative h-[90vh] bg-neutral-100 flex items-center justify-center overflow-hidden">
         <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=90&w=2000" class="absolute inset-0 w-full h-full object-cover contrast-125 brightness-75" alt="Hero">
         <div class="relative z-10 text-center text-white mix-blend-difference px-6">
-            <h1 class="text-8xl md:text-[14rem] font-black tracking-tighter leading-none uppercase italic">STUDIO</h1>
-            <p class="text-[12px] tracking-[0.5em] font-bold uppercase mt-4">Crafted In India / Drop 001</p>
+            <h1 class="logo-font text-8xl md:text-[14rem] tracking-tighter leading-none uppercase italic">STUDIO</h1>
+            <p class="text-[12px] tracking-[0.5em] font-bold uppercase mt-4">VENTABLACK / Drop 001 / India</p>
         </div>
     </section>
 
     <!-- Product Grid -->
     <section class="px-6 lg:px-24 py-32">
         <div class="flex justify-between items-end mb-16 border-b-2 border-black pb-8">
-            <h2 class="text-5xl font-black tracking-tighter uppercase italic">The Collection</h2>
+            <h2 class="text-4xl md:text-5xl font-black tracking-tighter uppercase italic">The Collection</h2>
             <p class="text-[10px] font-bold tracking-widest text-neutral-400">001 — 004</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12" id="productGrid"></div>
@@ -145,12 +152,12 @@
     <footer class="bg-white pt-32 pb-12 px-6 lg:px-24 border-t border-gray-100">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
             <div>
-                <h4 class="text-2xl font-black tracking-tighter uppercase italic mb-6">Dunk's</h4>
-                <p class="text-xs font-medium text-neutral-400 leading-relaxed uppercase tracking-widest">Experimental Streetwear Studio. Redefining the Indian luxury landscape.</p>
+                <h4 class="logo-font text-3xl italic mb-4">VENTABLACK</h4>
+                <p class="text-xs font-medium text-neutral-400 leading-relaxed uppercase tracking-widest">Experimental Streetwear Studio. Redefining the Indian luxury landscape through minimalist design.</p>
             </div>
         </div>
         <div class="pt-12 border-t border-gray-100 flex justify-between items-center text-[10px] font-bold text-neutral-300 uppercase tracking-[0.3em]">
-            <p>© 2026 DUNK'S STUDIO</p>
+            <p>© 2026 VENTABLACK STUDIO</p>
             <p>India</p>
         </div>
     </footer>
@@ -194,7 +201,7 @@
     </div>
 
     <script>
-        // Use hardcoded config for Firebase features (Login etc)
+        // Use hardcoded config for Firebase features
         const firebaseConfig = {
             apiKey: "AIzaSyAZPYLEuSJJcQukGCMvp7QtZOs2NJMOTKQ",
             authDomain: "dunk-s-official.firebaseapp.com",
@@ -209,10 +216,10 @@
         const provider = new firebase.auth.GoogleAuthProvider();
 
         const PRODUCTS = [
-            { id: 'p1', name: 'Archive Box Tee', price: 2499, img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800' },
-            { id: 'p2', name: 'Heavy Oversize', price: 3200, img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800' },
-            { id: 'p3', name: 'Studio Black', price: 2800, img: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800' },
-            { id: 'p4', name: 'Studio White', price: 1999, img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800' }
+            { id: 'p1', name: 'Venta-Black Box Tee', price: 2499, img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=800' },
+            { id: 'p2', name: 'Heavy Studio Oversize', price: 3200, img: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800' },
+            { id: 'p3', name: 'Venta Luxury Noir', price: 2800, img: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800' },
+            { id: 'p4', name: 'Venta Studio White', price: 1999, img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800' }
         ];
 
         let cart = [];
@@ -264,12 +271,12 @@
                     <div class="aspect-[3/4] bg-neutral-100 overflow-hidden relative mb-6">
                         <img src="${p.img}" class="w-full h-full object-cover transition-all duration-1000 group-hover:grayscale group-hover:scale-110">
                         <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span class="bg-white text-black text-[10px] font-black px-8 py-4 uppercase">Add to Bag</span>
+                            <span class="bg-white text-black text-[10px] font-black px-8 py-4 uppercase tracking-widest">Add to Bag</span>
                         </div>
                     </div>
-                    <div class="flex justify-between">
-                        <h3 class="text-xs font-black uppercase tracking-wider">${p.name}</h3>
-                        <p class="text-xs font-black italic">₹${p.price.toLocaleString()}</p>
+                    <div class="flex flex-col">
+                        <h3 class="text-[11px] font-black uppercase tracking-wider mb-1">${p.name}</h3>
+                        <p class="text-[11px] font-black italic opacity-60">₹${p.price.toLocaleString()}</p>
                     </div>
                 </div>
             `).join('');
@@ -333,5 +340,3 @@
     </script>
 </body>
 </html>
-
-```
